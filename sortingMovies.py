@@ -13,11 +13,11 @@ import subprocess as sub
 
 def seperateMoviesAndTVWithRatings():
 	
-	imdbRatingsFile = open('ratings.list')
+	imdbRatingsFile = open('Lists/ratings.list')
 
-	movieFile = open('movieRatings.list', 'w')
+	movieFile = open('Lists/movieRatings.list', 'w')
 
-	tvFile = open('tvshowRatings.list', 'w')
+	tvFile = open('Lists/tvshowRatings.list', 'w')
 
 	imdbReadFile = imdbRatingsFile.read()
 	
@@ -71,11 +71,11 @@ def seperateMoviesAndTVWithRatings():
 
 def seperateMoviesAndTV():
 
-	imdbFile = open('movies.list')
+	imdbFile = open('Lists/movies.list')
 
-	movieFile = open('movie.list', 'w')
+	movieFile = open('Lists/movie.list', 'w')
 
-	tvFile = open('tvshow.list', 'w')
+	tvFile = open('Lists/tvshow.list', 'w')
 
 	imdbReadFile = imdbFile.read()
 
@@ -112,9 +112,9 @@ def seperateMoviesAndTV():
 
 def movieList():
 
-	f = open('myMovies.list')
+	f = open('Lists/myMovies.list')
 
-	masterFile = open('allmovies.list')
+	masterFile = open('Lists/allmovies.list')
 
 	wf = f.read()
 
