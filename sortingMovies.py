@@ -152,9 +152,9 @@ class Movie:
 		self.releaseDate = '' 
 		
 	def __init__(self, title, rating, releaseDate):
-		self.title = ''
-		self.rating = 0
-		self.releaseDate = '' 
+		self.title = title
+		self.rating = rating
+		self.releaseDate = releaseDate 
 
 	def setTitle(self, title):
 		self.title = title
@@ -179,10 +179,12 @@ class TVShow:
 		self.releaseDate = '' 
 		
 	def __init__(self, title, rating, releaseDate):
-		self.title = ''
-		self.rating = 0
-		self.releaseDate = '' 
-
+		self.show = show
+		self.episode = episode
+		self.episodeNumber = episodeNUmber
+		self.rating = rating
+		self.releaseDate = releaseDate 
+		
 	def setShow(self, show):
 		self.show = show
 
