@@ -28,25 +28,23 @@ class Movie:
 
 class TVShow:
 	def __init__(self):
-		self.show = ''
-		self.episode = ''
-		self.episodeNumber = ''
+		self.showName = ''
 		self.rating = 0
 		self.releaseDate = ''
-		self.quality = ''
-		self.fileLocation = ''
+		self.plot = ''
+		self.genre = '' 
+		self.numberOfSeasons = 0
 		
-	def __init__(self, show, episode, episodeNumber, rating, releaseDate, quality, fileLocation):
-		self.show = show
-		self.episode = episode
-		self.episodeNumber = episodeNumber
-		self.rating = rating
-		self.releaseDate = releaseDate 
-		self.quality = quality
-		self.fileLocation = fileLocation
-
-	def setShow(self, show):
-		self.show = show
+	def __init__(self, showName, numberOfSeasons):
+		self.showName = showName
+		self.rating = 0
+		self.releaseDate = '' 
+		self.plot = ''
+		self.genre = ''
+		self.numberOfSeasons = numberOfSeasons
+		
+	def setShowname(self, showName):
+		self.showName = showName
 
 	def setRating(self, rating):
 		self.rating = rating
@@ -54,16 +52,50 @@ class TVShow:
 	def setReleaseDate(self, releaseDate):
 		self.releaseDate = releaseDate
 
-	def setEpisode(self, episode):
-		self.episode = episode
+class TVSeason:
+	def __init__(self):
+		self.showName = ''
+		self.seasonNumber = 0
+		self.seasonLocation = ''
+		
+	def __init__(self, showName, seasonNumber):
+		self.showName = showName
+		self.seasonNumber = seasonNumber
+		self.sesasonLocation = ''
+	
+class TVEpisode:
+	def __init__(self):
+		self.episodeName = ''
+		self.episodeNumber = ''
+		self.showName = ''
+		self.seasonNumber = 0
+		self.filePath = ''
+		self.fileName = ''
+		self.quality = ''
+		self.fileExtension = ''
+		
+	def __init__(self, episodeName, episodeNumber,showName,seasonNumber, filePath, fileName, quality, fileExtension):
+		self.episodeName = episodeName
+		self.episodeNumber = episodeNumber
+		self.showName = showName
+		self.seasonNumber = seasonNumber
+		self.filePath = filePath
+		self.fileName = fileName
+		self.quality = quality
+		self.fileExtension = fileExtension
+		
+	def setEpisodeName(self, episodeName):
+		self.episodeName = episodeName
 
 	def setEpisodeNumber(self, episodeNumber):
-		self.episodeNumber = episodeNumber
+		self.episodeNumber = episodeNumber		
+	
+	def setFilePath(self, filePath):
+		self.filePath = filePath
 		
-	def setFileLocation(self, fileLocation):
-		self.fileLocation = fileLocation
-
-	def writeShow(self):
+	def setFileName(self, fileName):
+		self.fileName = fileName
 		
-		retVal = show+','+episode+','+episodeNumber+','+rating+','+releaseDate
-		return retVal
+	def setQuality(self, quality):
+		self.quality = quality
+		
