@@ -1,26 +1,49 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import os
+import os, sys
 import media 
 import dbConnection as dbcon
 import re
+import inspect
 
 def importMedia():
 	#A foler name as a parameter and if it's TV or Movies
-	folder = raw_input("Enter folder path.")
-	
+	if len(sys.argv) != 3:
+		return
+	directoryPath = sys.argv[1]
+	mediaOption = sys.argv[2]
+	print directoryPath
+	print mediaOption
 	mediaDB = dbcon.Database('Media')
-	#Create a table based on the folder if it doesn't exist.
 	
 	#Get a list of all of the media 
-	pass
+	if mediaOption == '-t':
+		print 'Tv Shows'
+		tvShows, tvSeasons, tvEpisodes = allTVShows(directoryPath)
+		importTvShows(mediaDB, tvShows, tvSeasons, tvEpisodes)
+
 
 #Tv Show Specific
-def importTvShows(tvDB, tvShows):
-	pass
-
-
+def importTvShows(tvDB, tvShows, tvSeasons, tvEpisodes):
+	#Attempt to create the necessary tables if they don't exist
+	print 'Attempting to create'
+	#tv = media.TVShow('','')
+	tvDB.createTable('Show', dir(media.TVShow()))
+	tvDB.createTable('Season', dir(media.TVSeason()))
+	tvDB.createTable('Episode', dir(media.TVEpisode()))
+	
+	print 'Attempting to insert'
+	insertList(tvDB, 'Show',tvShows)
+	insertList(tvDB, 'Season',tvSeasons)
+	insertList(tvDB, 'Episode',tvEpisodes)
+	
+def insertList(db, tableName, someList):
+	#Insert data into tables. 
+	for item in someList:
+		print 'Inserting: ', item.__dict__
+		db.insertInto(tableName, item.__dict__)
+		
 #Movie Specific
 def importMovies(movieDb, movies):
 	pass
@@ -50,13 +73,14 @@ def allTVShows(directoryPath):
 		# Only deal with episodes and use the path from the root
 		elif files != []: 
 			season = (showSeason[7].split(' '))[1] # Gets the season number
+			seasonList.append(media.TVSeason(showName, season))
 			for f in files:
 				seasonNumber,episodeNumber, quality, fileName, fileExtension = stripFileInformation(f)
 				if int(seasonNumber) == int(season): #confirm that the episode is from the current season
 					episodeList.append(media.TVEpisode('',episodeNumber,showName, seasonNumber,'',fileName,quality,fileExtension))	
 				#else TODO if the episode is in the wrong directory something should be done.. 
-	
-	return showList, seasonList,episodeList
+	print 'Done Reading files'
+	return showList, seasonList, episodeList
 
 #Regular expressions and os path used to get meaningful information from the filename	
 def stripFileInformation(f):
@@ -71,5 +95,6 @@ def stripFileInformation(f):
 
 	return s, e, q, fileName, fileExtension
 	
-tvshowdir = '/home/jay/Documents/MediaPlayer/Tv Shows'
-allTVShows(tvshowdir)
+importMedia()
+#tvshowdir = '/home/jay/Documents/MediaPlayer/Tv Shows'
+#allTVShows(tvshowdir)
