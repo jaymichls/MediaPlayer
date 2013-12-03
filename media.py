@@ -22,24 +22,27 @@ class Movie:
 		return retVal
 
 class TVShow:
-	def __init__(self, showName='', numberOfSeasons=''):
+	def __init__(self, showName='', numberOfSeasons='', folderImage=''):
 		self.showName = showName
 		self.rating = 0
 		self.releaseDate = '' 
 		self.plot = ''
 		self.genre = ''
 		self.numberOfSeasons = numberOfSeasons
+		self.folderImage = folderImage
 		
 	def __dir__(self):
-		return ['showName','rating','releaseDate','plot','genre','numberOfSeasons']
+		return ['showName','rating','releaseDate','plot','genre','numberOfSeasons', 'folderImage']
 
 class TVSeason:
-	def __init__(self, showName='', seasonNumber=''):
+	def __init__(self, showName='', seasonNumber='', folderImage='', numberOfEpisodes=0):
 		self.showName = showName
 		self.seasonNumber = seasonNumber
+		self.folderImage = folderImage
+		self.numberOfEpisodes = numberOfEpisodes
 		
 	def __dir__(self):
-		return ['showName','seasonNumber']
+		return ['showName','seasonNumber', 'folderImage', 'numberOfEpisodes']
 	
 class TVEpisode:
 	def __init__(self, episodeName='', episodeNumber=0,showName='',seasonNumber=0, filePath='', fileName='', quality='', fileExtension=''):
