@@ -29,9 +29,9 @@ def importTvShows(tvDB, tvShows, tvSeasons, tvEpisodes):
 	#Attempt to create the necessary tables if they don't exist
 	print 'Attempting to create'
 	#tv = media.TVShow('','')
-	tvDB.createTable('Show', dir(media.TVShow()))
-	tvDB.createTable('Season', dir(media.TVSeason()))
-	tvDB.createTable('Episode', dir(media.TVEpisode()))
+	tvDB.createTable('Show', dir(media.TVShow()), media.TVShow.uniqueColumns())
+	tvDB.createTable('Season', dir(media.TVSeason()), media.TVSeason.uniqueColumns())
+	tvDB.createTable('Episode', dir(media.TVEpisode()), media.TVEpisode.uniqueColumns())
 	
 	print 'Attempting to insert'
 	insertList(tvDB, 'Show',tvShows)

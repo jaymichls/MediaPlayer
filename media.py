@@ -34,6 +34,10 @@ class TVShow:
 	def __dir__(self):
 		return ['showName','rating','releaseDate','plot','genre','numberOfSeasons', 'folderImage']
 
+	# Temporary solution to unique rows
+	@staticmethod
+	def uniqueColumns():
+		return ['showName'] #Should add year also
 class TVSeason:
 	def __init__(self, showName='', seasonNumber='', folderImage='', numberOfEpisodes=0):
 		self.showName = showName
@@ -43,6 +47,10 @@ class TVSeason:
 		
 	def __dir__(self):
 		return ['showName','seasonNumber', 'folderImage', 'numberOfEpisodes']
+	
+	@staticmethod
+	def uniqueColumns():
+		return ['showName','seasonNumber']
 	
 class TVEpisode:
 	def __init__(self, episodeName='', episodeNumber=0,showName='',seasonNumber=0, filePath='', fileName='', quality='', fileExtension=''):
@@ -57,3 +65,7 @@ class TVEpisode:
 	
 	def __dir__(self):
 		return ['episodeName','episodeNumber','showName','seasonNumber','filePath','fileName','quality','fileExtension']
+	
+	@staticmethod	
+	def uniqueColumns():
+		return ['episodeNumber','showName','seasonNumber']
