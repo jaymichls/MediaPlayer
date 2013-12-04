@@ -37,13 +37,13 @@ def importTvShows(tvDB, tvShows, tvSeasons, tvEpisodes):
 	insertList(tvDB, 'Show',tvShows)
 	insertList(tvDB, 'Season',tvSeasons)
 	insertList(tvDB, 'Episode',tvEpisodes)
-	
+		
 def insertList(db, tableName, someList):
 	#Insert data into tables. 
 	for item in someList:
 		#print 'Inserting: ', item.__dict__
 		db.insertInto(tableName, item.__dict__)
-		
+
 #Movie Specific
 def importMovies(movieDb, movies):
 	pass
@@ -105,7 +105,7 @@ def allTVShows1(directoryPath):
 		
 		if showName == currentShow:	#Get show season episides and folder.jpg
 			#See if there is a folder.jpg 
-			seasonFolderImage = [f for f in files if f == 'folder.jpg']
+			seasonFolderImage = os.path.join(root,[f for f in files if f == 'folder.jpg'][0])			
 			#Number of episodes is the number of files unless there is a folder.jpg
 			if seasonFolderImage == '': numberOfEpisodes = len(files)
 			else: numberOfEpisodes = len(files) - 1
@@ -118,15 +118,16 @@ def allTVShows1(directoryPath):
 				#stripFileInformation from the file 
 				if f != 'folder.jpg' and f != 'Thumbs.db': 					
 					seasonNumber,episodeNumber, quality, fileName, fileExtension = stripFileInformation(f)
-				#Create new Epsiode 
-				if int(seasonNumber) == int(season): #confirm that the episode is from the current season
-					episodeList.append(media.TVEpisode('',episodeNumber,showName, seasonNumber,'',fileName,quality,fileExtension))
+					#Create new Epsiode 
+					if int(seasonNumber) == int(season): #confirm that the episode is from the current season
+						episodeList.append(media.TVEpisode('',episodeNumber,showName, seasonNumber,'',fileName,quality,fileExtension))
+						
 					
 		elif showName != currentShow:	#New show get folder.jpg
 			#Number of season is the length of the dirs 
 			numberOfSeason = len(dirs)
 			#folder.jpg should be the only file if not ditch the rest.
-			showFolderImage = [f for f in files if f == 'folder.jpg']				
+			showFolderImage = os.path.join(root,[f for f in files if f == 'folder.jpg'][0])
 			#Create new show with newShow name
 			showList.append(media.TVShow(showName,numberOfSeason,showFolderImage))
 			#Set currentShow to showName 
