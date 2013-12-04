@@ -32,7 +32,7 @@ class TVShow:
 		self.folderImage = folderImage
 		
 	def __dir__(self):
-		return ['showName','rating','releaseDate','plot','genre','numberOfSeasons', 'folderImage']
+		return ['rootDir','rating','releaseDate','folderImage','plot','genre','numberOfSeasons', 'showName']
 
 	# Temporary solution to unique rows
 	@staticmethod
@@ -46,7 +46,7 @@ class TVSeason:
 		self.numberOfEpisodes = numberOfEpisodes
 		
 	def __dir__(self):
-		return ['showName','seasonNumber', 'folderImage', 'numberOfEpisodes']
+		return ['rootDir','folderImage', 'numberOfEpisodes', 'seasonNumber', 'showName']
 	
 	@staticmethod
 	def uniqueColumns():
@@ -64,8 +64,10 @@ class TVEpisode:
 		self.fileExtension = fileExtension
 	
 	def __dir__(self):
-		return ['episodeName','episodeNumber','showName','seasonNumber','filePath','fileName','quality','fileExtension']
+		return ['rootDir','filePath','fileName','quality','fileExtension', 'seasonNumber', 'showName','episodeNumber','episodeName']
 	
 	@staticmethod	
 	def uniqueColumns():
 		return ['episodeNumber','showName','seasonNumber']
+	
+	
