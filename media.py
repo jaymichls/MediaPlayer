@@ -22,7 +22,7 @@ class Movie:
 		return retVal
 
 class TVShow:
-	def __init__(self, showName='', numberOfSeasons='', folderImage=''):
+	def __init__(self, showName, numberOfSeasons='', folderImage='',rootDir=''):
 		self.showName = showName
 		self.rating = 0
 		self.releaseDate = '' 
@@ -30,6 +30,7 @@ class TVShow:
 		self.genre = ''
 		self.numberOfSeasons = numberOfSeasons
 		self.folderImage = folderImage
+		self.rootDir = rootDir
 		
 	def __dir__(self):
 		return ['rootDir','rating','releaseDate','folderImage','plot','genre','numberOfSeasons', 'showName']
@@ -39,11 +40,12 @@ class TVShow:
 	def uniqueColumns():
 		return ['showName'] #Should add year also
 class TVSeason:
-	def __init__(self, showName='', seasonNumber='', folderImage='', numberOfEpisodes=0):
+	def __init__(self, showName, seasonNumber, folderImage='', numberOfEpisodes=0,rootDir=''):
 		self.showName = showName
 		self.seasonNumber = seasonNumber
 		self.folderImage = folderImage
 		self.numberOfEpisodes = numberOfEpisodes
+		self.rootDir = rootDir
 		
 	def __dir__(self):
 		return ['rootDir','folderImage', 'numberOfEpisodes', 'seasonNumber', 'showName']
@@ -53,7 +55,7 @@ class TVSeason:
 		return ['showName','seasonNumber']
 	
 class TVEpisode:
-	def __init__(self, episodeName='', episodeNumber=0,showName='',seasonNumber=0, filePath='', fileName='', quality='', fileExtension=''):
+	def __init__(self, episodeName='', episodeNumber=0,showName='',seasonNumber=0, filePath='', fileName='', quality='', fileExtension='',rootDir=''):
 		self.episodeName = episodeName
 		self.episodeNumber = episodeNumber
 		self.showName = showName
@@ -62,6 +64,7 @@ class TVEpisode:
 		self.fileName = fileName
 		self.quality = quality
 		self.fileExtension = fileExtension
+		self.rootDir = rootDir
 	
 	def __dir__(self):
 		return ['rootDir','filePath','fileName','quality','fileExtension', 'seasonNumber', 'showName','episodeNumber','episodeName']

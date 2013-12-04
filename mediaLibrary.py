@@ -1,43 +1,45 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import os, sys
+import os, sys, re
 import media 
 import dbConnection as dbcon
-import re
 import timeit
 
-def importMedia():
-	#A foler name as a parameter and if it's TV or Movies
-	if len(sys.argv) != 3:
-		return
-	directoryPath = sys.argv[1]
-	mediaOption = sys.argv[2]
-
-	mediaDB = dbcon.Database('Media1')
+def importMedia(mediaOption, databaseName, directoryPath):
+	
+	mediaDB = dbcon.Database(databaseName)
 	
 	#Get a list of all of the media 
+	#TODO movie option or both.. 
 	if mediaOption == '-t':
-		print 'Tv Shows'
-		tvShows, tvSeasons, tvEpisodes = allTVShows1(directoryPath)
-		
+		print 'Importing Tv Shows'
+		tvShows, tvSeasons, tvEpisodes = readTVShows(directoryPath)		
 		importTvShows(mediaDB, tvShows, tvSeasons, tvEpisodes)
 
+	if mediaOption == '-m':
+		print 'Importing Movies'
+		movies = readMovies(directoryPath)
+		importMovies(movies)
 
 #Tv Show Specific
-def importTvShows(tvDB, tvShows, tvSeasons, tvEpisodes):
+def importTvShows(db, tvShows, tvSeasons, tvEpisodes):
 	#Attempt to create the necessary tables if they don't exist
-	print 'Attempting to create'
-	#tv = media.TVShow('','')
-	tvDB.createTable('Show', dir(media.TVShow()), media.TVShow.uniqueColumns())
-	tvDB.createTable('Season', dir(media.TVSeason()), media.TVSeason.uniqueColumns())
-	tvDB.createTable('Episode', dir(media.TVEpisode()), media.TVEpisode.uniqueColumns())
+	print 'Attempting to create'	
+	db.createTable('Show', dir(media.TVShow()), media.TVShow.uniqueColumns())
+	db.createTable('Season', dir(media.TVSeason()), media.TVSeason.uniqueColumns())
+	db.createTable('Episode', dir(media.TVEpisode()), media.TVEpisode.uniqueColumns())
 	
 	print 'Attempting to insert'
-	insertList(tvDB, 'Show',tvShows)
-	insertList(tvDB, 'Season',tvSeasons)
-	insertList(tvDB, 'Episode',tvEpisodes)
+	insertList(db, 'Show',tvShows)
+	insertList(db, 'Season',tvSeasons)
+	insertList(db, 'Episode',tvEpisodes)
 		
+#Movies specific
+def importMovies(db, movies):
+	print 'Unimpleted'
+	
+	
 def insertList(db, tableName, someList):
 	#Insert data into tables. 
 	for item in someList:
@@ -45,12 +47,13 @@ def insertList(db, tableName, someList):
 		db.insertInto(tableName, item.__dict__)
 
 #Movie Specific
-def importMovies(movieDb, movies):
-	pass
+def readMovies(directoryPath):
+	print 'Unimplemented'
+	movies = []
+	return movies
 
-
-def allTVShows1(directoryPath):
-	print 'Starting to read files'
+def readTVShows(directoryPath):
+	print 'Starting to read TV files'
 	#initialize vars
 	showPosition = len(directoryPath.split('/'))
 	seasonPosition = showPosition + 1
@@ -70,14 +73,14 @@ def allTVShows1(directoryPath):
 		
 		if showName == currentShow:	#Get show season episides and folder.jpg
 			#See if there is a folder.jpg 
-			seasonFolderImage = os.path.join(root,[f for f in files if f == 'folder.jpg'][0])			
+			seasonFolderImage = root,[f for f in files if f == 'folder.jpg'][0]
 			#Number of episodes is the number of files unless there is a folder.jpg
 			if seasonFolderImage == '': numberOfEpisodes = len(files)
 			else: numberOfEpisodes = len(files) - 1
 			#if this is in fact a season of a show the season number will be the seasonPosition in the newShow (7)
 			season = (newShow[seasonPosition].split(' '))[1] # Gets the season number
 			#Create a new Season with above
-			seasonList.append(media.TVSeason(showName, season,seasonFolderImage, numberOfEpisodes))		
+			seasonList.append(media.TVSeason(showName, season,seasonFolderImage, numberOfEpisodes,root))		
 			#Go through each file of the current season except folder.jpg
 			for f in files:				
 				#stripFileInformation from the file 
@@ -85,16 +88,16 @@ def allTVShows1(directoryPath):
 					seasonNumber,episodeNumber, quality, fileName, fileExtension = stripFileInformation(f)
 					#Create new Epsiode 
 					if int(seasonNumber) == int(season): #confirm that the episode is from the current season
-						episodeList.append(media.TVEpisode('',episodeNumber,showName, seasonNumber,'',fileName,quality,fileExtension))
+						episodeList.append(media.TVEpisode('',episodeNumber,showName, seasonNumber,'',fileName,quality,fileExtension,root))
 						
 					
 		elif showName != currentShow:	#New show get folder.jpg
 			#Number of season is the length of the dirs 
 			numberOfSeason = len(dirs)
 			#folder.jpg should be the only file if not ditch the rest.
-			showFolderImage = os.path.join(root,[f for f in files if f == 'folder.jpg'][0])
+			showFolderImage = root,[f for f in files if f == 'folder.jpg'][0]
 			#Create new show with newShow name
-			showList.append(media.TVShow(showName,numberOfSeason,showFolderImage))
+			showList.append(media.TVShow(showName,numberOfSeason,showFolderImage,root))
 			#Set currentShow to showName 
 			currentShow = showName
 			
@@ -125,7 +128,10 @@ def dbSizeTest():
 		testDB.insertInto('Episode', test.__dict__)
 
 if __name__ == '__main__':
-	importMedia()
+	if len(sys.argv) != 3:#TODO fix args
+		print "syntax: " + sys.argv[0] + "-t/-m database Name folder path"
+		exit()
+	importMedia(sys.argv[1],sys.argv[2],sys.argv[2])
 
 #	print(timeit.timeit("dbSizeTest()", setup="from __main__ import dbSizeTest", number=10))
 
