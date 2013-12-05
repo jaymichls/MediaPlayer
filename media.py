@@ -2,25 +2,22 @@
 # -*- coding: utf-8 -*-
 
 class Movie:		
-	def __init__(self, title='', rating=0, releaseDate=''):
+	def __init__(self, title, rating=0, releaseDate='', genre='', plot='', fileExtension='', filePath='', fileName='', quality='',folderImage='', rootDir=''):
 		self.title = title
 		self.rating = rating
 		self.releaseDate = releaseDate 
+		self.genre = genre
+		self.plot = plot
+		self.folderImage = folderImage
+		self.rootDir = rootDir
 
-	def setTitle(self, title):
-		self.title = title
-
-	def setRating(self, rating):
-		self.rating = rating
-
-	def setReleaseDate(self, releaseDate):
-		self.releaseDate = releaseDate
-
-	def writeMovie(self):
-
-		retVal = title+','+rating+','+releaseDate
-		return retVal
-
+	def __dir__(self):
+		return ['fileExtension','quality','filePath','fileName','rootDir','folderImage','plot','genre','releaseDate','rating','title']
+	
+	@staticmethod
+	def uniqueColumns():
+		return ['title', 'quality']	#should also have year eventually. 
+		
 class TVShow:
 	def __init__(self, showName, numberOfSeasons='', folderImage='',rootDir=''):
 		self.showName = showName
@@ -39,6 +36,7 @@ class TVShow:
 	@staticmethod
 	def uniqueColumns():
 		return ['showName'] #Should add year also
+	
 class TVSeason:
 	def __init__(self, showName, seasonNumber, folderImage='', numberOfEpisodes=0,rootDir=''):
 		self.showName = showName

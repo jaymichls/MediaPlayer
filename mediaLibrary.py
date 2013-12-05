@@ -9,9 +9,9 @@ import timeit
 def importMedia(mediaOption, databaseName, directoryPath):
 	
 	mediaDB = dbcon.Database(databaseName)
-	
+	print mediaOption
 	#Get a list of all of the media 
-	#TODO movie option or both.. 
+	#TODO movie option or both.. maybe read the folder name to judge
 	if mediaOption == '-t':
 		print 'Importing Tv Shows'
 		tvShows, tvSeasons, tvEpisodes = readTVShows(directoryPath)		
@@ -26,22 +26,25 @@ def importMedia(mediaOption, databaseName, directoryPath):
 def importTvShows(db, tvShows, tvSeasons, tvEpisodes):
 	#Attempt to create the necessary tables if they don't exist
 	print 'Attempting to create'	
-	db.createTable('Show', dir(media.TVShow()), media.TVShow.uniqueColumns())
-	db.createTable('Season', dir(media.TVSeason()), media.TVSeason.uniqueColumns())
-	db.createTable('Episode', dir(media.TVEpisode()), media.TVEpisode.uniqueColumns())
+	db.createTable(media.TVShow.__class__.name__, dir(media.TVShow()), media.TVShow.uniqueColumns())
+	db.createTable(media.TVSeason.__class__.name__, dir(media.TVSeason()), media.TVSeason.uniqueColumns())
+	db.createTable(media.TVEpisode.__class__.name__, dir(media.TVEpisode()), media.TVEpisode.uniqueColumns())
 	
-	print 'Attempting to insert'
-	insertList(db, 'Show',tvShows)
-	insertList(db, 'Season',tvSeasons)
-	insertList(db, 'Episode',tvEpisodes)
+	insertList(db, media.TVShow.__class__.name__, tvShows)
+	insertList(db, media.TVSeason.__class__.name__, tvSeasons)
+	insertList(db, media.TVEpisode.__class__.name__, tvEpisodes)
 		
 #Movies specific
 def importMovies(db, movies):
-	print 'Unimpleted'
-	
+	print 'Attempting to create %s table'%(media.Movie.__class__.__name___)
+	db.createTable(media.Movie.__class__.__name___, dir(media.Movie()), media.Movie.uniqueColumns())
+	for m in movies:
+		print m.__dict__
+	#insertList(db, media.Movie.__class__.__name___, movies)
 	
 def insertList(db, tableName, someList):
 	#Insert data into tables. 
+	print 'Attempting to insert'
 	for item in someList:
 		#print 'Inserting: ', item.__dict__
 		db.insertInto(tableName, item.__dict__)
@@ -50,6 +53,20 @@ def insertList(db, tableName, someList):
 def readMovies(directoryPath):
 	print 'Unimplemented'
 	movies = []
+	
+	movieTilePosition = len(directoryPath.split('/'))
+	
+	newMovie = root.split('/')[movieTilePosition]
+	#might have to do a check to see that there aren't any child directories in movie folders
+	for f in files:
+		if f == 'folder.jpg' and f != 'Thumbs.db':
+			movieFolderImage = f
+			
+		elif f != 'folder.jpg' and f != 'Thumb.db':
+			fileName, fileExtension, quality = stripMovieFileInformation(f)
+			
+	movies.append(media.Movie(title, 0, '', '', '', fileExtension, '',fileName, quality,movieFolderImage, root))
+	print 'Done reading files'
 	return movies
 
 def readTVShows(directoryPath):
@@ -64,16 +81,12 @@ def readTVShows(directoryPath):
 	currentShow = ''
 	
 	for root, dirs, files in os.walk(directoryPath):
-		if root == directoryPath:
-			tempShowList = dirs
-			continue
-		
 		newShow = root.split('/')
 		showName = newShow[showPosition]
 		
 		if showName == currentShow:	#Get show season episides and folder.jpg
 			#See if there is a folder.jpg 
-			seasonFolderImage = root,[f for f in files if f == 'folder.jpg'][0]
+			seasonFolderImage = [f for f in files if f == 'folder.jpg'][0]
 			#Number of episodes is the number of files unless there is a folder.jpg
 			if seasonFolderImage == '': numberOfEpisodes = len(files)
 			else: numberOfEpisodes = len(files) - 1
@@ -95,7 +108,7 @@ def readTVShows(directoryPath):
 			#Number of season is the length of the dirs 
 			numberOfSeason = len(dirs)
 			#folder.jpg should be the only file if not ditch the rest.
-			showFolderImage = root,[f for f in files if f == 'folder.jpg'][0]
+			showFolderImage = [f for f in files if f == 'folder.jpg'][0]
 			#Create new show with newShow name
 			showList.append(media.TVShow(showName,numberOfSeason,showFolderImage,root))
 			#Set currentShow to showName 
@@ -119,6 +132,12 @@ def stripFileInformation(f):
 
 	return s, e, q, fileName, fileExtension
 
+def stripMovieFileInformation(f):
+	regexQuality = re.compile("(?:HDTV|720)",re.IGNORECASE)
+	quality = regexQuality.findall(f)[0]
+	fileName, fileExtension = os.path.splitext(f)
+	return fileName, fileExtension, quality
+	
 def dbSizeTest():
 	testDB = dbcon.Database ('dbSizeTest')
 	testDB.createTable('Episode', dir(media.TVEpisode()))
